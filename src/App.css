@@ -1,0 +1,612 @@
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: nowrap;
+}
+
+.title {
+  font-family: 'Courier New', monospace;
+  font-size: 2rem;
+  margin: 0;
+  color: #ff69b4;
+  text-shadow: 2px 2px 0 #333;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.header .title {
+  flex: 1;
+}
+
+.dice-container {
+  display: flex;
+  gap: 0.5rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
+}
+
+.roll-hint {
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  color: #888;
+  margin-left: 0.5rem;
+}
+
+.dice {
+  background: #555;
+  border: 3px solid #333;
+  border-radius: 8px;
+  padding: 4px 6px;
+  transition: transform 0.1s, background 0.2s;
+}
+
+.dice:hover {
+  transform: scale(1.05);
+}
+
+.dice.active {
+  background: #fff;
+}
+
+.dice.rolling {
+  animation: shake 0.1s infinite;
+}
+
+@keyframes shake {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+.dice-face {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.1;
+  margin: 0;
+  color: #888;
+  font-weight: bold;
+}
+
+.dice.active .dice-face {
+  color: #222;
+}
+
+.board {
+  display: flex;
+  flex-direction: column;
+  border-collapse: collapse;
+}
+
+.board-row {
+  display: flex;
+}
+
+.cell {
+  width: 80px;
+  height: 80px;
+  background: #000;
+  border: 1px solid #fff;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.cell-avatar {
+  font-family: 'Courier New', monospace;
+  font-size: 0.65rem;
+  line-height: 1.1;
+  margin: 0;
+  white-space: pre;
+  font-weight: bold;
+}
+
+.game-area {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.left-gutter {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 150px;
+  height: 800px; /* Match grid height: 10 rows x 80px */
+}
+
+.left-gutter .rules-btn {
+  margin-top: auto;
+}
+
+.gutter-player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #2a2a2a;
+  border: 2px solid #444;
+  border-radius: 8px;
+  padding: 0.75rem;
+  height: 120px;
+  justify-content: center;
+}
+
+.gutter-player .turn-banner {
+  position: static;
+  transform: none;
+  margin-bottom: 0.5rem;
+}
+
+.gutter-player-name {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.gutter-player-avatar {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  line-height: 1.1;
+  margin: 0;
+  white-space: pre;
+}
+
+.show-me-btn {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  background: #1a1a1a;
+  border: 2px solid #f5d742;
+  border-radius: 4px;
+  color: #f5d742;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.show-me-btn:hover {
+  background: #f5d742;
+  color: #1a1a1a;
+}
+
+.dice-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: auto;
+}
+
+.moves-area {
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.moves-counter {
+  font-family: 'Courier New', monospace;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #f5d742;
+  text-align: center;
+  margin-top: 0.5rem;
+  background: #1a1a1a;
+  border-radius: 4px;
+}
+
+.finish-move-btn {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  margin-top: 0.5rem;
+  background: #1a1a1a;
+  border: 2px solid #f5d742;
+  border-radius: 4px;
+  color: #f5d742;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.finish-move-btn:hover:not(:disabled) {
+  background: #f5d742;
+  color: #1a1a1a;
+}
+
+.finish-move-btn:disabled {
+  border-color: #555;
+  color: #555;
+  cursor: not-allowed;
+}
+
+/* Setup Screen Styles */
+.setup-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  min-height: 100vh;
+}
+
+.setup-subtitle {
+  font-family: 'Courier New', monospace;
+  color: #888;
+  margin: 0.5rem 0 1.5rem 0;
+}
+
+.setup-container {
+  display: flex;
+  gap: 2rem;
+  align-items: stretch;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.setup-divider {
+  display: flex;
+  align-items: center;
+  font-family: 'Courier New', monospace;
+  font-size: 2rem;
+  color: #666;
+  font-weight: bold;
+}
+
+.character-setup {
+  background: #2a2a2a;
+  border: 4px solid #555;
+  border-radius: 8px;
+  padding: 1.5rem;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.player-title {
+  font-family: 'Courier New', monospace;
+  color: #f5d742;
+  margin: 0;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.player-role {
+  display: block;
+  font-size: 1rem;
+  color: #888;
+  margin-top: 0.25rem;
+}
+
+.setup-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.setup-field label {
+  font-family: 'Courier New', monospace;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.name-input {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  padding: 0.5rem;
+  background: #1a1a1a;
+  border: 2px solid #555;
+  border-radius: 4px;
+  color: #fff;
+  outline: none;
+}
+
+.name-input:focus {
+  border-color: #f5d742;
+}
+
+.name-input::placeholder {
+  color: #555;
+}
+
+.name-input-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.name-input-row .name-input {
+  flex: 1;
+}
+
+.random-name-btn {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  background: #1a1a1a;
+  border: 2px solid #555;
+  border-radius: 4px;
+  color: #ccc;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: all 0.1s;
+}
+
+.random-name-btn:hover {
+  border-color: #f5d742;
+  color: #f5d742;
+}
+
+.color-picker,
+.avatar-picker {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.picker-arrow {
+  font-family: 'Courier New', monospace;
+  font-size: 1.5rem;
+  background: #1a1a1a;
+  border: 2px solid #555;
+  border-radius: 4px;
+  color: #ccc;
+  cursor: pointer;
+  padding: 0.25rem 0.75rem;
+  transition: all 0.1s;
+}
+
+.picker-arrow:hover {
+  border-color: #f5d742;
+  color: #f5d742;
+}
+
+.avatar-label {
+  flex: 1;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #ccc;
+  background: #1a1a1a;
+  border-radius: 4px;
+  padding: 0.5rem;
+}
+
+.color-swatch {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 4px;
+  text-align: center;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.character-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: #1a1a1a;
+  border-radius: 4px;
+  height: 120px;
+  width: 100%;
+}
+
+.ascii-art {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  margin: 0;
+  line-height: 1.2;
+  white-space: pre;
+}
+
+.start-button {
+  font-family: 'Courier New', monospace;
+  font-size: 1.5rem;
+  padding: 1rem 2rem;
+  margin-top: 2rem;
+  background: #1a1a1a;
+  border: 3px solid #f5d742;
+  border-radius: 8px;
+  color: #f5d742;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.start-button:hover:not(:disabled) {
+  background: #f5d742;
+  color: #1a1a1a;
+}
+
+.start-button:disabled {
+  border-color: #555;
+  color: #555;
+  cursor: not-allowed;
+}
+
+.end-game-btn {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  margin-top: 1.5rem;
+  background: #1a1a1a;
+  border: 2px solid #666;
+  border-radius: 4px;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.end-game-btn:hover {
+  border-color: #e74c3c;
+  color: #e74c3c;
+}
+
+.winner-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.winner-text {
+  font-family: 'Courier New', monospace;
+  font-size: 3rem;
+  font-weight: bold;
+  margin: 0;
+  text-shadow: 2px 2px 0 #333;
+}
+
+.game-instruction {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.treats-remaining {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.5rem;
+}
+
+.treat-label {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: #888;
+  margin-bottom: 0.25rem;
+}
+
+.treat-bone {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #f5d742;
+}
+
+.treat-score {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.cell-treat {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #f5d742;
+  position: absolute;
+}
+
+.cell-taken-x {
+  font-family: 'Courier New', monospace;
+  font-size: 2rem;
+  font-weight: bold;
+  position: absolute;
+}
+
+.treat-prompt {
+  font-family: 'Courier New', monospace;
+  font-size: 0.75rem;
+  color: #f5d742;
+  text-align: center;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+}
+
+.cell {
+  position: relative;
+}
+
+.cell.valid-treat-spot::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  border: 2px solid #f5d742;
+  pointer-events: none;
+}
+
+.rules-btn {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  background: #1a1a1a;
+  border: 2px solid #666;
+  border-radius: 4px;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.rules-btn:hover {
+  border-color: #888;
+  color: #aaa;
+}
+
+.rules-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.rules-popup {
+  background: #000;
+  border: 2px solid #fff;
+  border-radius: 8px;
+  padding: 2rem 2.5rem;
+  max-width: 550px;
+}
+
+.rules-popup h3 {
+  font-family: 'Courier New', monospace;
+  color: #fff;
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.rules-popup ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.rules-popup li {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  color: #888;
+  margin-bottom: 0.75rem;
+  padding-left: 1.25rem;
+  position: relative;
+}
+
+.rules-popup li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #666;
+}
