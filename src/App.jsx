@@ -802,6 +802,11 @@ function App() {
   const player1Avatar = PET_AVATARS[player1.avatarIndex]
   const player2Avatar = SITTER_AVATARS[player2.avatarIndex]
 
+  // Check if any smell squares are visible (for contextual hint)
+  const hasVisibleSmell = currentTurn === 1 && revealLocation && !isMoving && treatsOnBoard.some(treat =>
+    humanLastPath.some(pathPos => isAdjacentDiagonal(pathPos, treat))
+  )
+
   // Create simple grid
   const grid = Array.from({ length: BOARD_HEIGHT }, (_, row) =>
     Array.from({ length: BOARD_WIDTH }, (_, col) => ({
@@ -923,7 +928,13 @@ function App() {
             End Game
           </button>
         </div>
-        <div className="board">
+        <div className="board-wrapper">
+          {hasVisibleSmell && (
+            <div className="smell-hint" style={{ color: player2Color }}>
+              You smell the sitter nearby...
+            </div>
+          )}
+          <div className="board">
           {grid.map((row, rowIndex) => (
             <div key={rowIndex} className="board-row">
               {row.map((cell) => {
@@ -1067,6 +1078,7 @@ function App() {
               })}
             </div>
           ))}
+          </div>
         </div>
       </div>
       {winner ? (
@@ -1108,22 +1120,36 @@ function App() {
       )}
       {showRules && (
         <div className="rules-overlay" onClick={() => setShowRules(false)}>
-          <div className="rules-popup">
+          <div className="rules-popup" onClick={(e) => e.stopPropagation()}>
             <h3>Rules</h3>
-            <ul>
-              <li>Pet moves first, Sitter moves second</li>
-              <li>Click dice to roll, move that many spaces</li>
-              <li>Click "Show Me" or SHIFT to see the board</li>
-              <li>Move by clicking adjacent cells (no diagonals)</li>
-              <li>Cannot cross your own path this turn</li>
-              <li>Click previous cell to undo a move</li>
-              <li>Sitter places a treat on/near their path</li>
-              <li>Pet can smell Sitter's trail near treats</li>
-              <li>Pet collects treats by crossing them</li>
-              <li>Pet wins by collecting all 3 treats</li>
-              <li>Sitter wins if paths cross</li>
-              <li>First turn: Pet can see Sitter</li>
-            </ul>
+            <div className="rules-section">
+              <h4>HOW TO WIN</h4>
+              <p><strong>Pet:</strong> Collect all 3 treats scattered by the Sitter</p>
+              <p><strong>Sitter:</strong> Catch the Pet by crossing paths with them</p>
+            </div>
+            <div className="rules-section">
+              <h4>GAMEPLAY</h4>
+              <ul>
+                <li>Players can't see each other (hidden by default)</li>
+                <li>Both players CAN see treat locations</li>
+                <li>Pet rolls 1 die, Sitter rolls 2 dice</li>
+                <li>Move by clicking adjacent cells (no diagonals)</li>
+                <li>Hold SHIFT or click "Show Me" to reveal your position</li>
+              </ul>
+            </div>
+            <div className="rules-section">
+              <h4>SMELL MECHANIC</h4>
+              <p>The Pet can "smell" the Sitter - when revealing, highlighted squares near treats show where the Sitter has recently walked.</p>
+            </div>
+            <div className="rules-section">
+              <h4>HIDDEN INFORMATION</h4>
+              <p>When the Pet collects a treat, the Sitter doesn't know until after their next move (before placing a new treat). The treat appears collected with an X.</p>
+            </div>
+            <div className="rules-section">
+              <h4>FIRST TURN</h4>
+              <p>On the first turn only, the Pet can see the Sitter's starting position to help avoid immediate collision.</p>
+            </div>
+            <button className="rules-close-btn" onClick={() => setShowRules(false)}>Close</button>
           </div>
         </div>
       )}
